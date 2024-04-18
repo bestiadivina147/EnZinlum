@@ -78,4 +78,9 @@ public class TokenContractTest {
         assertEquals(5d, ricknillos.balanceOf(morty.getPK()), 0d);
         assertEquals(28d, ricknillos.owner().getBalance(), 0d);
     }
+    // private void require(Boolean holds) throws IllegalArgumentException {
+    //     if (! holds) {
+    //         throw new IllegalArgumentException();
+    //     }
+    // }
 }
