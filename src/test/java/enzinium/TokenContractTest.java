@@ -1,7 +1,6 @@
 package enzinium;
 
 import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -78,9 +77,28 @@ public class TokenContractTest {
         assertEquals(5d, ricknillos.balanceOf(morty.getPK()), 0d);
         assertEquals(28d, ricknillos.owner().getBalance(), 0d);
     }
-    // private void require(Boolean holds) throws IllegalArgumentException {
-    //     if (! holds) {
-    //         throw new IllegalArgumentException();
-    //     }
-    // }
+    @Test(expected = ExceptioIllegalToken.class)
+    public void require() throws ExceptioIllegalToken {
+        ricknillos.require(false, 1d, 1d);
+    }
+    @Test
+    public void require_message() {
+        try{
+            ricknillos.require(false, 1d, 1d);
+
+        }catch (ExceptioIllegalToken e){
+            assertEquals("No se puede realizar la operacion",e.getMessage());
+        }
+    }
+
+    @Test
+    public void requireValues() {
+        try{
+            ricknillos.require(false, 143d, 666d);
+
+        }catch (ExceptioIllegalToken e){
+            assertEquals(143d,e.getPrimerNumero(),1);
+            assertEquals(666d, e.getSegundoNumero(),1);
+        }
+    }
 }
