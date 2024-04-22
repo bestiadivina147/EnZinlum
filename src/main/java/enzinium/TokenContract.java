@@ -104,27 +104,27 @@ public class TokenContract {
 
     public void transfer(PublicKey recipient, Double units) {
         try {
-            require(balanceOf(ownerPK) >= units);
+            require(balanceOf(ownerPK) >= units, balanceOf(ownerPK), units);
             this.getBalances().compute(ownerPK, (pk, tokens) -> tokens - units);
             this.getBalances().put(recipient, balanceOf(recipient) + units);
-        } catch (Exception e) {
-            // fails silently
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.toString() +" No hay  fondos suficientes");
         }      
     };
 
     public void transfer(PublicKey sender, PublicKey recipient, Double units) {
         try {
-            require(balanceOf(sender) >= units);
+            require(balanceOf(sender) >= units,balanceOf(sender), units);
             this.getBalances().put(sender, balanceOf(sender) - units);
             this.getBalances().put(recipient, balanceOf(recipient) + units);
-        } catch (Exception e) {
-            // fails silently
+        } catch (ExceptioIllegalToken e) {
+            System.out.println(e.toString() +" No hay fondos disponibles");
         }   
     }
 
-    private void require(Boolean holds) throws Exception {
-        if (! holds) {
-            throw new Exception();
+    void require(Boolean holds, Double primerNumero, Double segundoNumero) throws ExceptioIllegalToken {
+        if (! holds ) {
+            throw new ExceptioIllegalToken("No se puede realizar la operacion", primerNumero, segundoNumero);
         }
     }
 
@@ -152,12 +152,12 @@ public class TokenContract {
 
     void payable(PublicKey recipient, Double enziniums) {
         try {
-            require(enziniums >= this.getTokenPrice());
+            require(enziniums >= this.getTokenPrice(), enziniums, this.getTokenPrice());
             Double units = Math.floor(enziniums / tokenPrice);
             transfer(recipient, units);
             this.owner.transferEZI(enziniums);
-        } catch (Exception e) {
-            // fail silently
+        } catch (ExceptioIllegalToken e) {
+            System.out.println(e.toString() +" No hay enziniums");
         }
     }
 }
